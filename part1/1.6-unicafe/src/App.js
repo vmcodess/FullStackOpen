@@ -30,7 +30,6 @@ const Statistics = ({ good, neutral, bad, total, average, positive}) => {
       </table>
     )
   }
-
 }
 
 const App = () => {
