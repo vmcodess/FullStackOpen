@@ -18,29 +18,24 @@ const Header = ({ course }) => (
 const Content = (props) => {
   const parts = props.course.parts;
   return (
-    <div>
-      <p>
-        {parts[0].name} {parts[0].exercises}
-      </p>
-      <p>
-        {parts[1].name} {parts[1].exercises}
-      </p>
-      <p>
-        {parts[2].name} {parts[2].exercises}
-      </p>
-      <p>
-        {parts[3].name} {parts[3].exercises}
-      </p>
+    <div>   
+      {parts.map(part => 
+        <span key={part.id}>
+          {part.name} {part.exercises} <br /><br />
+        </span>
+      )}
     </div>
   )
 }
 
 const Total = ( props ) => {
   const part = props.total.parts;
-  console.log(props.total.parts);
-  return(
+
+  const sum = part.reduce((accumulator, currentValue) => accumulator + currentValue.exercises, 0)
+
+  return (
     <div>
-      <strong>total of { part[0].exercises + part[1].exercises + part[2].exercises + part[3].exercises } exercises</strong>
+      <strong>total of {sum} exercises</strong>
     </div>
   )
 }
