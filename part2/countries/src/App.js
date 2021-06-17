@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
+import Country from './components/Country/Country'
 
 const App = () => {
   const [ countries, setCountries ] = useState([])
@@ -17,33 +18,6 @@ const App = () => {
   }
 
   const filteredCountries = search === '' ? [] : countries.filter(data => data.name.toLowerCase().includes(search.toLowerCase()));
-
-  const countryInfo = (data) => {
-     return (
-      <div>
-        <h1>{data.name}</h1>
-        <p>
-          capital {data.capital} <br />
-          population {data.population}
-        </p>
-        <h3>languages</h3>
-        <div>
-          <ul>
-            {data.languages.map((language, i) => (
-              <li key={i}>{language.nativeName}</li>
-            ))}
-          </ul>
-        </div>
-        <img 
-          src={data.flag} 
-          alt={'flag'} 
-          style={{
-            height:"100px",
-            width: "100px"
-          }}/>
-      </div>
-    )
-  }
   
   return (
     <div>
@@ -56,7 +30,7 @@ const App = () => {
           : filteredCountries.length <= 10 && filteredCountries.length > 1
             ? filteredCountries.map(found => <span key={found.name}> {found.name}<br /> </span>)
             : filteredCountries.length === 1
-              ? countryInfo(filteredCountries[0])
+              ? <Country data={filteredCountries[0]}/>
               : ''
         }
       </div>
