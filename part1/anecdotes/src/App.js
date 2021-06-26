@@ -10,7 +10,7 @@ const App = () => {
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blod tests when dianosing patients'
   ]
-   
+  
   const [selected, setSelected] = useState(0)
   const [votes, setVotes] = useState(Array(anecdotes.length).fill(0));
   const maxVotes = votes.indexOf(Math.max(...votes))
@@ -20,7 +20,7 @@ const App = () => {
     newVotes[selected] += 1
     setVotes(newVotes)
   }
-
+  
   return (
     <div>
       <h1>Anecdote of the day</h1>
