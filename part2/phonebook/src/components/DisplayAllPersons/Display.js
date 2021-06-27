@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Display = ({ persons, search }) => {
+const Display = ({ persons, search, deletePerson }) => {
     let filteredNames = persons;
     if (search) {
         filteredNames = persons.filter(person => person.name.toLowerCase().includes(search.toLowerCase()))
@@ -8,7 +8,8 @@ const Display = ({ persons, search }) => {
 
     return (
         <div>
-            {filteredNames.map(found => <p key={found.name}> {found.name} {found.number} </p>)}
+            {filteredNames.map(found => <div key={found.name}> {found.name} {found.number} <button onClick={() => deletePerson(found.id)}>delete</button></div>)}
+            
         </div>
     )
 }
