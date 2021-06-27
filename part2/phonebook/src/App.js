@@ -5,7 +5,7 @@ import Form from './components/AddPersonForm/Form'
 import Display from './components/DisplayAllPersons/Display'
 
 const App = () => {
-  const [persons, setPersons] = useState([])
+  const [ persons, setPersons ] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNumber ] = useState('')
   const [ search, setSearch ] = useState('')
@@ -13,6 +13,7 @@ const App = () => {
   useEffect(() => {
     axios
       .get('http://localhost:3001/persons').then(response => {
+        console.log('useEffect - .then()');
         setPersons(response.data)
       })
   }, [])
@@ -25,27 +26,30 @@ const App = () => {
     setNumber(event.target.value)
   )
 
-  const handleSearchChange = (event) => (
+  const handleSearchChange = (event) => {
     setSearch(event.target.value)
-  )
+  }
 
   const addName = (event) => {
     event.preventDefault();
+    const personObject = {
+      name: newName,
+      number: newNumber
+    }
+
     if (persons.find(person => person.name === newName)) {
       alert(`${newName} is already added to phonebook`)
     } else {
-      const personsObject = {
-        name: newName,
-        number: newNumber,
-        id: persons.length + 1
-      }
-      setPersons(persons.concat(personsObject))
-      setNewName('')
-      setNumber('')
+      axios
+        .post('http://localhost:3001/persons', personObject)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+          setNewName('')
+          setNumber('')
+        })
+        .catch((err) => console.log(`error posting: ${err}`))
     }
   }
-
-  const filteredNames = persons.filter(person => person.name.toLowerCase().includes(search.toLowerCase())); 
 
   return (
     <div>
@@ -63,7 +67,7 @@ const App = () => {
         handleNumberChange={handleNumberChange} 
       />
       <h2>Numbers</h2>
-      <Display filteredNames={filteredNames} />
+      <Display persons={persons} search={search} />
     </div>
   )
 }
