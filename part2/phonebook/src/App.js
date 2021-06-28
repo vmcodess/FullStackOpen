@@ -3,12 +3,17 @@ import Search from './components/Search/Search'
 import Form from './components/AddPersonForm/Form'
 import Display from './components/DisplayAllPersons/Display'
 import PersonService from './components/Services/PersonService'
+import Notification from './components/Notification/Notification'
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNumber ] = useState('')
   const [ search, setSearch ] = useState('')
+  const [ successMessage, setSuccessMessage ] = useState({
+    message: null,
+    result: null
+  })
 
   useEffect(() => {
     PersonService
@@ -46,6 +51,15 @@ const App = () => {
           .then(returnedPerson => {
             const newPerson = persons.map(person => person.id !== id ? person : returnedPerson)
             setPersons(newPerson)
+            //console.log(returnedPerson);
+            const resultMessage = {
+              message: `Updated ${returnedPerson.name}`,
+              result: 'success'
+            }
+            setSuccessMessage(resultMessage)
+            setTimeout(() => {
+              setSuccessMessage({...successMessage, message: null})
+            }, 5000)
           })
       }
     } else {
@@ -60,6 +74,17 @@ const App = () => {
           setPersons(persons.concat(newPerson))
           setNewName('')
           setNumber('')
+
+                  const resultMessage = {
+            message: `Added ${newPerson.name}`,
+            result: 'success'
+          }
+          setSuccessMessage(resultMessage)
+          setTimeout(() => {
+            setSuccessMessage({...successMessage, message: null})
+          }, 5000)
+        
+          
         })
         .catch((err) => console.log(`error posting: ${err}`))
     }
@@ -81,6 +106,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successMessage} />
       <Search 
         search={search} 
         handleSearchChange={handleSearchChange} 
