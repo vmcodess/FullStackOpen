@@ -75,7 +75,7 @@ const App = () => {
           setNewName('')
           setNumber('')
 
-                  const resultMessage = {
+          const resultMessage = {
             message: `Added ${newPerson.name}`,
             result: 'success'
           }
