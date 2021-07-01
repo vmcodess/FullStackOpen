@@ -13,6 +13,12 @@ const Notification = (props) => {
         {props.message.message}
       </div>
     )
+  } else if (props.message.result === 'fail') {
+    return (
+      <div className="error">
+        {props.message.message}
+      </div>
+    )
   }
  return null;
 }

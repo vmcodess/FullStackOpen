@@ -51,10 +51,21 @@ const App = () => {
           .then(returnedPerson => {
             const newPerson = persons.map(person => person.id !== id ? person : returnedPerson)
             setPersons(newPerson)
-            //console.log(returnedPerson);
             const resultMessage = {
               message: `Updated ${returnedPerson.name}`,
               result: 'success'
+            }
+            setSuccessMessage(resultMessage)
+            setTimeout(() => {
+              setSuccessMessage({...successMessage, message: null})
+            }, 5000)
+          })
+          .catch((err) => {
+            console.log(`error updating user: ${err}`)
+
+            const resultMessage = {
+              message: `Information of ${newObj.name} has already been removed from the server`,
+              result: 'fail'
             }
             setSuccessMessage(resultMessage)
             setTimeout(() => {
@@ -83,8 +94,6 @@ const App = () => {
           setTimeout(() => {
             setSuccessMessage({...successMessage, message: null})
           }, 5000)
-        
-          
         })
         .catch((err) => console.log(`error posting: ${err}`))
     }
@@ -96,10 +105,12 @@ const App = () => {
       PersonService
         .remove(id)
         .then(response => {
-          //console.log(`deleted ${personIDFound.name} successfully`)
+          console.log(`deleted ${personIDFound.name} successfully`)
           setPersons(persons.filter(person => person.id !== id))
         })
-        .catch(err => console.log(`Error deleting: ${err}`))
+        .catch((err) => {
+          console.log(`Error deleting: ${err}`)
+        })
     }
   }
 
