@@ -9,7 +9,6 @@ const Display = ({ persons, search, deletePerson }) => {
     return (
         <div>
             {filteredNames.map(found => <div key={found.name}> {found.name} {found.number} <button onClick={() => deletePerson(found.id)}>delete</button></div>)}
-            
         </div>
     )
 }

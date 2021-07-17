@@ -74,28 +74,54 @@ const App = () => {
           })
       }
     } else {
-      const personObject = {
-        name: newName,
-        number: newNumber
+
+      if (newName.length < 3) {
+        console.log(`name gotta be more than 3 char length`);
+
+        const resultMessage = {
+          message: `Person validation failed: name: Path \`name\` (\`${newName}\`) is shorter than the minimum allowed length (3).`,
+          result: 'fail'
+        }
+        setSuccessMessage(resultMessage)
+        setTimeout(() => {
+          setSuccessMessage({...successMessage, message: null})
+        }, 5000)
+      } else if (newNumber.length < 8) {
+        console.log(`number gotta have at least 8 digits`);
+
+        const resultMessage = {
+          message: `Person validation failed: number: Path \`number\` (\`${newNumber}\`) must have at least 8 digits.`,
+          result: 'fail'
+        }
+        setSuccessMessage(resultMessage)
+        setTimeout(() => {
+          setSuccessMessage({...successMessage, message: null})
+        }, 5000)
+      } else {
+
+        const personObject = {
+          name: newName,
+          number: newNumber
+        }
+
+        PersonService
+          .create(personObject)
+          .then(newPerson => {
+            setPersons(persons.concat(newPerson))
+            setNewName('')
+            setNumber('')
+  
+            const resultMessage = {
+              message: `Added ${newPerson.name}`,
+              result: 'success'
+            }
+            setSuccessMessage(resultMessage)
+            setTimeout(() => {
+              setSuccessMessage({...successMessage, message: null})
+            }, 5000)
+          })
+          .catch((err) => console.log(`error posting: ${err}`))
       }
-
-      PersonService
-        .create(personObject)
-        .then(newPerson => {
-          setPersons(persons.concat(newPerson))
-          setNewName('')
-          setNumber('')
-
-          const resultMessage = {
-            message: `Added ${newPerson.name}`,
-            result: 'success'
-          }
-          setSuccessMessage(resultMessage)
-          setTimeout(() => {
-            setSuccessMessage({...successMessage, message: null})
-          }, 5000)
-        })
-        .catch((err) => console.log(`error posting: ${err}`))
     }
   }  
 
