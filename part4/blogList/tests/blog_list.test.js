@@ -2,8 +2,13 @@ const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
 const api = supertest(app);
-const Blogs = require('../models/blog');
+const Blog = require('../models/blog');
 const helper = require('./test_helper');
+
+const blogsInDb = async () => {
+  const blogs = await Blog.find({});
+  return blogs.map(blog => blog.toJSON());
+};
 
 const initialBlogs = [
   {
@@ -57,10 +62,10 @@ const initialBlogs = [
 ];
 
 beforeEach(async () => {
-  await Blogs.deleteMany({});
+  await Blog.deleteMany({});
 
   for (let blog of initialBlogs) {
-    let obj = new Blogs(blog);
+    let obj = new Blog(blog);
     await obj.save();
   }
 });
@@ -92,6 +97,41 @@ test('a new blog is added', async () => {
   await api.post('/api/blogs').send(newBlog).expect(201);
   const response = await api.get('/api/blogs').expect(200);
   expect(response.body).toHaveLength(initialBlogs.length + 1);
+});
+
+// not working.. skipping
+test('verify if likes property is missing then it defaults to 0', async () => {
+  const newBlog = {
+    title: 'Verifying',
+    author: 'Jane Doe',
+    url: 'https://fullstackopen.com/'
+  };
+
+  const response = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  //const response = await api.get('/api/blogs').expect(200);
+
+  expect(response.body.likes).toBeDefined();
+  expect(response.body.likes).toBe(0);
+});
+
+test('delete a blog', async () => {
+  const deleteblog = {
+    _id: '5a422ba71b54a676234d17fb',
+    title: 'TDD harms architecture',
+    author: 'Robert C. Martin',
+    url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
+    likes: 0,
+    __v: 0,
+  };
+
+  await api.delete(`/api/blogs/${deleteblog._id}`).expect(204);
+  const blogsAtEnd = await blogsInDb();
+  expect(blogsAtEnd.length).toBe(initialBlogs.length - 1);
 });
 
 afterAll(() => {
