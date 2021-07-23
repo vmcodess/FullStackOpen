@@ -81,6 +81,19 @@ test('query if a blog has id or _id', async () => {
   expect(singleBlog[0]._id).toBe(undefined);
 });
 
+test('a new blog is added', async () => {
+  const newBlog = {
+    title: 'New Blog',
+    author: 'vmcodes',
+    url: 'http://blog.com/newBlog/',
+    likes: 49,
+  };
+
+  await api.post('/api/blogs').send(newBlog).expect(201);
+  const response = await api.get('/api/blogs').expect(200);
+  expect(response.body).toHaveLength(initialBlogs.length + 1);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
