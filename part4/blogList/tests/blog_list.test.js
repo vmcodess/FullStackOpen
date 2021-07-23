@@ -3,6 +3,7 @@ const supertest = require('supertest');
 const app = require('../app');
 const api = supertest(app);
 const Blogs = require('../models/blog');
+const helper = require('./test_helper');
 
 const initialBlogs = [
   {
@@ -71,6 +72,13 @@ test('all blogs returned as json', async () => {
     .expect('Content-Type', /application\/json/);
 
   expect(response.body).toHaveLength(initialBlogs.length);
+});
+
+test('query if a blog has id or _id', async () => {
+  const singleBlog = await helper.blogsInDb();
+
+  expect(singleBlog[0].id).toBeDefined();
+  expect(singleBlog[0]._id).toBe(undefined);
 });
 
 afterAll(() => {
